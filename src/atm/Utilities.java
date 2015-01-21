@@ -11,6 +11,7 @@ import java.sql.SQLException;
  */
 public class Utilities {
 	private static String SCHEMA = "atm"; 
+	
 	@SuppressWarnings("unused") //for quick tests only
 	private static void main(String[] args){
 		Connection conn = getConnection();
@@ -24,22 +25,23 @@ public class Utilities {
 	public static Connection getConnection(){
 		log("Loading driver...");
 		Connection conn;
+		
         try {
             // The newInstance() call is a work around for some
             // broken Java implementations
-            
         	Class.forName("com.mysql.jdbc.Driver").newInstance();
         } catch (Exception ex) {
+        	//lines below are useful for debugging classpath problems
         	log(ex.getMessage());
         	log(ex.toString());
         	log(ex.getStackTrace().toString());
             System.exit(1);
         }
+        
         try {
             conn = DriverManager.getConnection("jdbc:mysql://localhost/"+SCHEMA, "guest", "guest");
             log("Success");
             return conn;
-
         } catch (SQLException ex) {
             // handle any errors
             log("SQLException: " + ex.getMessage());

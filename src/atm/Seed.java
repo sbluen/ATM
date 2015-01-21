@@ -10,12 +10,9 @@ package atm;
  *
  */
 public class Seed {
-	/**
-	 * 
-	 * @param args Unused - seed values are hardcoded. This parameter is included only
-	 * so that this class can be executed directly from the shell during development.
-	 */
-	public static void main(String[] args) {
+	
+	@SuppressWarnings("unused") //for quick tests only
+	private static void main(String[] args) {
 		seed();
 	}
 	

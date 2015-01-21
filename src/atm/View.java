@@ -4,23 +4,13 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.CardLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
-import javax.swing.AbstractAction;
-
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentListener;
-import java.awt.event.ContainerListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-
-import javax.swing.Action;
-
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;

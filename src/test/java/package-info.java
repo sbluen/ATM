@@ -1,5 +1,6 @@
 /**
  * Tests for atm package
+ * @author Steven Bluen
  */
 package test.java;
 
