@@ -30,7 +30,11 @@ import javax.swing.event.AncestorListener;
 
 import java.awt.Color;
 
-
+/**
+ * GUI built using WindowBuilder
+ * @author Steven Bluen
+ *
+ */
 public class View {
 
 	private static final String INTROPANEL = "Intro screen";

@@ -1,4 +1,4 @@
-package atm;
+package test.java;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
@@ -9,6 +9,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import atm.Model;
+
+/**
+ * Unit tests for JUnit 4
+ * @author Steven Bluen
+ *
+ */
 public class ModelTest {
 	
 	String accnum = "0123456789012345";

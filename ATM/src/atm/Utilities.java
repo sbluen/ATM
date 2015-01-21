@@ -4,22 +4,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * Class used for misc methods. These may need to be changed in the future.
+ * Class used for misc methods. These will likely need to be changed in the future 
+ * before any deployment.
  * @author Steven Bluen
  *
  */
 public class Utilities {
-	private static String schema = "atm"; 
+	private static String SCHEMA = "atm"; 
 	@SuppressWarnings("unused") //for quick tests only
 	private static void main(String[] args){
 		Connection conn = getConnection();
-	}
-
-	/**
-	 * @param schema the schema to use
-	 */
-	public static void setSchema(String schema) {
-		Utilities.schema = schema;
 	}
 
 	/**
@@ -42,7 +36,7 @@ public class Utilities {
             System.exit(1);
         }
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/"+schema, "guest", "guest");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/"+SCHEMA, "guest", "guest");
             log("Success");
             return conn;
 
