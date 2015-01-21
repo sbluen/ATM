@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.dbutils.DbUtils;
+
 /**
  * Class used for database interaction.
  * @author Steven Bluen
@@ -32,15 +34,20 @@ public class Model {
 			if (rs.next()){
 				if (encrypt(pin).equals(rs.getString(1))){
 					Utilities.log("pin verification passed");
+					DbUtils.closeQuietly(rs);
+					DbUtils.closeQuietly(ps);
 					return true;
 				}else{
 					Utilities.log("pin verification failed, pin doesn't match record");
+					DbUtils.closeQuietly(rs);
+					DbUtils.closeQuietly(ps);
 					return false;
 				}
 			}else{
 				//There were no valid rows.
 				Utilities.log("pin verification failed, no valid rows retrieved");
-				return false;
+				DbUtils.closeQuietly(rs);
+				DbUtils.closeQuietly(ps);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -67,6 +74,7 @@ public class Model {
 			ps.setFloat(2, balance);
 			ps.setString(3, encrypt(pin));
 			ps.executeUpdate();
+			DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -85,12 +93,16 @@ public class Model {
 			ResultSet rs = ps.executeQuery();
 			rs.next();
 			float initialBalance = rs.getFloat(1);
+			DbUtils.closeQuietly(rs);
+			DbUtils.closeQuietly(ps);
 			
 			ps = conn.prepareStatement("select sum(balancechange) from transactions where accno = ?");
 			ps.setString(1, accountNumber);
 			rs = ps.executeQuery();
 			rs.next();
 			float totalChange = rs.getFloat(1);
+			DbUtils.closeQuietly(rs);
+			DbUtils.closeQuietly(ps);
 			
 			return initialBalance + totalChange;
 			
@@ -117,6 +129,7 @@ public class Model {
 			ps.setString(1,  accountNumber);
 			ps.setFloat(2, amount);
 			ps.executeUpdate();
+			DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -127,10 +140,12 @@ public class Model {
 	 * @param accountNumber The account number of the account to delete
 	 */
 	public static void deleteAccount(String accountNumber) {
+		PreparedStatement ps;
 		try {
-			PreparedStatement ps = conn.prepareStatement("delete from accounts where accno = ?");
-			ps.setString(1,  accountNumber);
-			ps.executeUpdate();
+			ps = conn.prepareStatement("delete from accounts where accno = ?");
+		ps.setString(1,  accountNumber);
+		ps.executeUpdate();
+		DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
