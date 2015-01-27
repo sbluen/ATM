@@ -76,7 +76,7 @@ public class Model {
 			ps.executeUpdate();
 			DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			Utilities.log("Account already created with account number " + accountNumber);
 		}
 	}
 	

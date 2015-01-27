@@ -13,6 +13,7 @@ public class Seed {
 	
 	@SuppressWarnings("unused") //for quick tests only
 	private static void main(String[] args) {
+		Model.initialize();
 		seed();
 	}
 	
@@ -23,9 +24,10 @@ public class Seed {
 	 * 3/10000/3456
 	 */
 	public static void seed(){
-		Model.initialize();
+		Utilities.log("Seeding...");
 		Model.createAccount("1", 5000, "1234");
 		Model.createAccount("2", 8000, "2345");
 		Model.createAccount("3", 10000, "3456");
+		Utilities.log("Seeding finished");
 	}
 }
