@@ -66,13 +66,11 @@ public class Model {
 	 * @param accountNumber the account number for the account
 	 * @param pin the account's pin (before encryption)
 	 */
-	public static void createAccount(String accountNumber, float balance, String pin) {
-		PreparedStatement ps;
+	public static void createAccount(String accountNumber, Float balance, String pin) {
 		try {
-			ps = conn.prepareStatement("insert into accounts (accno, balance, pin) values (?, ?, ?)");
-			ps.setString(1, accountNumber);
-			ps.setFloat(2, balance);
-			ps.setString(3, encrypt(pin));
+			PreparedStatement ps = prepare(conn, 
+					"insert into accounts (accno, balance, pin) values (?, ?, ?)",
+					accountNumber, balance, encrypt(pin));
 			ps.executeUpdate();
 			DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
@@ -117,7 +115,7 @@ public class Model {
 	 * @param accountNumber The account number this transaction will belong to
 	 * @param amount The amount added to the account (negative for withdrawals)
 	 */
-	public static void createTransaction(String accountNumber, float amount) {
+	public static void createTransaction(String accountNumber, Float amount) {
 		
 		if (getBalance(accountNumber) + amount < 0){
 			throw new InvalidParameterException("Cannot withdraw more money " +
@@ -125,9 +123,9 @@ public class Model {
 			
 		}
 		try {
-			PreparedStatement ps = conn.prepareStatement("insert into transactions (accno, balancechange) values (?, ?)");
-			ps.setString(1,  accountNumber);
-			ps.setFloat(2, amount);
+			PreparedStatement ps = prepare(conn,
+				"insert into transactions (accno, balancechange) values (?, ?)",
+				accountNumber, amount);
 			ps.executeUpdate();
 			DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
@@ -149,5 +147,23 @@ public class Model {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * 
+	 * @param conn The connection to prepare a statement with. This is initialized
+	 * from outside this method so that it can be closed if necessary.
+	 * @param sql The SQL code to parameterize and prepare
+	 * @param objects The objects to prepare the SQL with
+	 * @return 
+	 * @throws SQLException When too many objects are passed to this method. This
+	 * exception must be handled by the calling code.
+	 */
+	private static PreparedStatement prepare(Connection conn, String sql, Object...objects) throws SQLException{
+		PreparedStatement ps = conn.prepareStatement(sql);
+		for (int i=0; i<objects.length; i++){
+			ps.setObject(i+1, objects[i]);
+		}
+		return ps;
 	}
 }

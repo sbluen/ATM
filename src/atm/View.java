@@ -25,8 +25,6 @@ import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.event.InputMethodListener;
-import java.awt.event.InputMethodEvent;
 import java.util.regex.Pattern;
 
 /**

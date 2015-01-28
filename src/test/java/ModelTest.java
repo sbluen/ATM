@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.is;
 
 import java.security.InvalidParameterException;
+import java.sql.SQLException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,12 +19,12 @@ import atm.Model;
  */
 public class ModelTest {
 	
-	String accnum = "0123456789012345";
+	String accnum = "9999999999999999";
 
 	@Before
 	public void setUp() throws Exception {
 		Model.initialize();
-		Model.createAccount(accnum, 5000, "1234");
+		Model.createAccount(accnum, 5000f, "1234");
 	}
 
 	@After
@@ -42,13 +43,13 @@ public class ModelTest {
 	@Test
 	public void testTransactions(){
 		assertEquals(5000, Model.getBalance(accnum), 0);
-		Model.createTransaction(accnum, 50);
+		Model.createTransaction(accnum, 50f);
 		assertEquals(5050, Model.getBalance(accnum), 0);
 		try{
-			Model.createTransaction(accnum, -10000);
+			Model.createTransaction(accnum, -10000f);
 			fail("withdrew nonexistant money");
-		}catch (InvalidParameterException ex){
-			assertThat(ex.getMessage(), is("Cannot withdraw more money " +
+		}catch (InvalidParameterException ex1){
+			assertThat(ex1.getMessage(), is("Cannot withdraw more money " +
 					"than exists in customer account"));
 			assertEquals(5050, Model.getBalance(accnum), 0);
 		}
