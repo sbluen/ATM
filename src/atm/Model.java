@@ -155,7 +155,7 @@ public class Model {
 	 * from outside this method so that it can be closed if necessary.
 	 * @param sql The SQL code to parameterize and prepare
 	 * @param objects The objects to prepare the SQL with
-	 * @return 
+	 * @return A prepared statement containing the objects parameterized into the SQL.
 	 * @throws SQLException When too many objects are passed to this method. This
 	 * exception must be handled by the calling code.
 	 */
