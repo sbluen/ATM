@@ -66,11 +66,11 @@ public class Model {
 	 * @param accountNumber the account number for the account
 	 * @param pin the account's pin (before encryption)
 	 */
-	public static void createAccount(String accountNumber, Float balance, String pin) {
+	public static void createAccount(String accountNumber, double d, String pin) {
 		try {
 			PreparedStatement ps = prepare(conn, 
 					"insert into accounts (accno, balance, pin) values (?, ?, ?)",
-					accountNumber, balance, encrypt(pin));
+					accountNumber, d, encrypt(pin));
 			ps.executeUpdate();
 			DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
