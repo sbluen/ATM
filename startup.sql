@@ -35,6 +35,7 @@ CREATE TABLE `accounts` (
   `accno` bigint(20) NOT NULL,
   `balance` float NOT NULL DEFAULT '0',
   `pin` varchar(256) NOT NULL,
+  `salt` varchar(256) NOT NULL,
   PRIMARY KEY (`idaccounts`),
   UNIQUE KEY `accno_UNIQUE` (`accno`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;

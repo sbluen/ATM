@@ -13,7 +13,6 @@ import org.apache.commons.dbutils.DbUtils;
  *
  */
 public class Model {
-	private static final String SALT = "$2a$08$Z2Fcw5eXZq5Qmkf4tTTsfgSSscQucEcH";
 	private static Connection conn;
 	public static void initialize(){
 		conn = Utilities.getConnection();
@@ -28,11 +27,11 @@ public class Model {
 	public static boolean verify(String accountNumber, String pin){		
 		try {
 			PreparedStatement ps = conn.prepareStatement(
-					"select pin from accounts where accno = ?");
+					"select pin, salt from accounts where accno = ?");
 			ps.setString(1, accountNumber);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()){
-				if (encrypt(pin).equals(rs.getString(1))){
+				if (encrypt(pin, rs.getString(2)).equals(rs.getString(1))){
 					Utilities.log("pin verification passed");
 					DbUtils.closeQuietly(rs);
 					DbUtils.closeQuietly(ps);
@@ -55,9 +54,15 @@ public class Model {
 		Utilities.log("pin verification failed due to an error condition");
 		return false;
 	}
-		
-	static String encrypt(String plainText){
-		return BCrypt.hashpw(plainText, SALT);
+	
+	/**
+	 * 
+	 * @param plainText The text to encrypt.
+	 * @param salt The salt to encrypt with. This should be unique for each account.
+	 * @return A hashed password.
+	 */
+	static String encrypt(String plainText, String salt){
+		return BCrypt.hashpw(plainText, salt);
 	}
 	
 	/**
@@ -68,9 +73,12 @@ public class Model {
 	 */
 	public static void createAccount(String accountNumber, double d, String pin) {
 		try {
+			//Using 12 salt rounds, per 
+			//http://security.stackexchange.com/questions/17207/recommended-of-rounds-for-bcrypt 
+			String salt = BCrypt.gensalt(12);
 			PreparedStatement ps = prepare(conn, 
-					"insert into accounts (accno, balance, pin) values (?, ?, ?)",
-					accountNumber, d, encrypt(pin));
+					"insert into accounts (accno, balance, pin, salt) values (?, ?, ?, ?)",
+					accountNumber, d, encrypt(pin, salt), salt);
 			ps.executeUpdate();
 			DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
