@@ -1,4 +1,5 @@
 package atm;
+import java.math.BigInteger;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -28,16 +29,18 @@ public class Model {
 	public static boolean verify(String accountNumber, String pin){		
 		try {
 			PreparedStatement ps = conn.prepareStatement(
-					"select pin from accounts where accno = ?");
-			ps.setString(1, accountNumber);
+					"select pin, create_date from accounts where accno = ?");
+			ps.setLong(1, Long.parseLong(accountNumber));
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()){
-				if (encrypt(pin).equals(rs.getString(1))){
+				if (encrypt(pin, SALT+rs.getString(2)).equals(rs.getString(1))){
 					Utilities.log("pin verification passed");
 					DbUtils.closeQuietly(rs);
 					DbUtils.closeQuietly(ps);
 					return true;
 				}else{
+					Utilities.log("pin=" + pin);
+					Utilities.log(SALT+rs.getString(2) + " should equal "+rs.getString(1));
 					Utilities.log("pin verification failed, pin doesn't match record");
 					DbUtils.closeQuietly(rs);
 					DbUtils.closeQuietly(ps);
@@ -55,9 +58,15 @@ public class Model {
 		Utilities.log("pin verification failed due to an error condition");
 		return false;
 	}
-		
-	static String encrypt(String plainText){
-		return BCrypt.hashpw(plainText, SALT);
+	
+	/**
+	 * 
+	 * @param plainText The text to encrypt
+	 * @param salt the salt to encrypt with
+	 * @return A bcrypt-encrypted string for storing the pin in the db
+	 */
+	static String encrypt(String plainText, String salt){
+		return BCrypt.hashpw(plainText, salt);
 	}
 	
 	/**
@@ -69,12 +78,23 @@ public class Model {
 	public static void createAccount(String accountNumber, Float balance, String pin) {
 		try {
 			PreparedStatement ps = prepare(conn, 
-					"insert into accounts (accno, balance, pin) values (?, ?, ?)",
-					accountNumber, balance, encrypt(pin));
+					"insert into accounts (accno, balance, pin) values (?, ?, ?) ",
+					Long.parseLong(accountNumber), balance, "");
 			ps.executeUpdate();
+			//Need to do this because MySQL doesn't have a returning clause
+			ps = prepare(conn, "select create_date from accounts where accno=?", 
+					Long.parseLong(accountNumber));
+			ResultSet rs = ps.executeQuery();
+			rs.next();
+			String createDate = rs.getString(1);
+			ps = prepare(conn, "update accounts set pin=? where accno=?",
+					encrypt(pin, SALT+createDate), Long.parseLong(accountNumber));
+			Utilities.log(ps.toString());
+			ps.executeUpdate();
+
 			DbUtils.closeQuietly(ps);
 		} catch (SQLException e) {
-			Utilities.log("Account already created with account number " + accountNumber);
+			Utilities.log("Account creation failed for account number " + accountNumber);
 		}
 	}
 	

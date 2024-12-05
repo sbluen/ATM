@@ -19,7 +19,7 @@ import atm.Model;
  */
 public class ModelTest {
 	
-	String accnum = "9999999999999999";
+	String accnum = "9999999999";
 
 	@Before
 	public void setUp() throws Exception {

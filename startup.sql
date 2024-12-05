@@ -32,9 +32,10 @@ DROP TABLE IF EXISTS `accounts`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `accounts` (
   `idaccounts` int(11) NOT NULL AUTO_INCREMENT,
-  `accno` bigint(20) NOT NULL,
+  `accno` bigint(10) NOT NULL,
   `balance` float NOT NULL DEFAULT '0',
   `pin` varchar(256) NOT NULL,
+  `create_date` TIMESTAMP NOT NULL DEFAULT NOW(),
   PRIMARY KEY (`idaccounts`),
   UNIQUE KEY `accno_UNIQUE` (`accno`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
@@ -49,7 +50,7 @@ DROP TABLE IF EXISTS `transactions`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `transactions` (
   `idtransactions` int(11) NOT NULL AUTO_INCREMENT,
-  `accno` bigint(20) NOT NULL,
+  `accno` bigint(10) NOT NULL,
   `balancechange` float NOT NULL,
   PRIMARY KEY (`idtransactions`),
   KEY `transactions_references_accounts` (`accno`),

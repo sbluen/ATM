@@ -25,9 +25,9 @@ public class Seed {
 	 */
 	public static void seed(){
 		Utilities.log("Seeding...");
-		Model.createAccount("1", 5000, "1234");
-		Model.createAccount("2", 8000, "2345");
-		Model.createAccount("3", 10000, "3456");
+		Model.createAccount("1", 5000.00f, "1234");
+		Model.createAccount("2", 8000.00f, "2345");
+		Model.createAccount("3", 10000.00f, "3456");
 		Utilities.log("Seeding finished");
 	}
 }
