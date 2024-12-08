@@ -49,8 +49,8 @@ public class ModelTest {
 			Model.createTransaction(accnum, -10000f);
 			fail("withdrew nonexistant money");
 		}catch (InvalidParameterException ex1){
-			assertThat(ex1.getMessage(), is("Cannot withdraw more money " +
-					"than exists in customer account"));
+			assertEquals(ex1.getMessage(), "Cannot withdraw more money " +
+					"than exists in customer account");
 			assertEquals(5050, Model.getBalance(accnum), 0);
 		}
 	}

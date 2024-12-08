@@ -82,17 +82,17 @@ public class View {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 450, 300);
+		frame.setBounds(100, 100, 533, 288);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new CardLayout(0, 0));
 		
 		JPanel intro = new JPanel();
 		frame.getContentPane().add(intro, INTROPANEL);
 		GridBagLayout gbl_intro = new GridBagLayout();
-		gbl_intro.columnWidths = new int[]{57, 212, 29, 91, 0, 0};
-		gbl_intro.rowHeights = new int[]{56, 22, 96, 17, 23, 0, 0};
-		gbl_intro.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_intro.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_intro.columnWidths = new int[]{0, 212, 0, 91, 0};
+		gbl_intro.rowHeights = new int[]{0, 22, 0, 17, 23, 17, 0};
+		gbl_intro.columnWeights = new double[]{1., 0.0, 1.0, 0.0, 1.0};
+		gbl_intro.rowWeights = new double[]{1.0, 0.0, 2.0, 0.0, 0.0, 0.0, 1.0};
 		intro.setLayout(gbl_intro);
 		
 		JLabel lblWelcomeToAjaxbank = new JLabel("Welcome to AJAXBank ATM.");
@@ -128,6 +128,7 @@ public class View {
 		JButton btnEnter = new JButton("Enter");
 		btnEnter.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				lblErrorInvalidPin.setVisible(false);
 				((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), PINPANEL);
 			}
 		});
@@ -139,13 +140,21 @@ public class View {
 		gbc_btnEnter.gridy = 4;
 		intro.add(btnEnter, gbc_btnEnter);
 		
+		JLabel lblNewLabel = new JLabel("(Note that the account entry textbox is just for the testing stage)");
+		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
+		gbc_lblNewLabel.gridx = 1;
+		gbc_lblNewLabel.gridy = 5;
+		intro.add(lblNewLabel, gbc_lblNewLabel);
+		
 		JPanel pin = new JPanel();
 		frame.getContentPane().add(pin, PINPANEL);
 		GridBagLayout gbl_pin = new GridBagLayout();
-		gbl_pin.columnWidths = new int[]{39, 86, 89, 41, 167, 0};
-		gbl_pin.rowHeights = new int[]{43, 22, 36, 25, 50, 23, 44, 0};
-		gbl_pin.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_pin.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_pin.columnWidths = new int[]{39, 86, 89, 41, 0};
+		gbl_pin.rowHeights = new int[] {0, 22, 0, 25, 0, 23, 0, 20};
+		gbl_pin.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, 0.0};
+		gbl_pin.rowWeights = new double[]{1., 0.0, 1., 0.0, 1., 0.0, 1.};
 		pin.setLayout(gbl_pin);
 		
 		JLabel lblEnterYourPin = new JLabel("Enter your PIN using the keypad below");
@@ -171,13 +180,6 @@ public class View {
 		gbc_lblErrorInvalidPin.gridx = 1;
 		gbc_lblErrorInvalidPin.gridy = 3;
 		pin.add(lblErrorInvalidPin, gbc_lblErrorInvalidPin);
-		
-		JButton btnReturnHomeFromPin = new JButton("Return to home screen");
-		btnReturnHomeFromPin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), INTROPANEL);
-			}
-		});
 		
 		txtPin = new JTextField();
 		GridBagConstraints gbc_txtPin = new GridBagConstraints();
@@ -206,6 +208,13 @@ public class View {
 		gbc_btnEnter_1.gridx = 2;
 		gbc_btnEnter_1.gridy = 5;
 		pin.add(btnEnter_1, gbc_btnEnter_1);
+		
+		JButton btnReturnHomeFromPin = new JButton("Return to home screen");
+		btnReturnHomeFromPin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), INTROPANEL);
+			}
+		});
 		GridBagConstraints gbc_btnReturnHomeFromPin = new GridBagConstraints();
 		gbc_btnReturnHomeFromPin.anchor = GridBagConstraints.SOUTHEAST;
 		gbc_btnReturnHomeFromPin.gridx = 4;
@@ -216,9 +225,9 @@ public class View {
 		frame.getContentPane().add(transaction, TRANSACTIONPANEL);
 		GridBagLayout gbl_transaction = new GridBagLayout();
 		gbl_transaction.columnWidths = new int[]{49, 50, 86, 0, 61, 143, 0};
-		gbl_transaction.rowHeights = new int[]{33, 17, 17, 23, 23, 23, 31, 23, 37, 0};
-		gbl_transaction.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_transaction.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_transaction.rowHeights = new int[] {33, 17, 17, 23, 23, 23, 31, 23, 0};
+		gbl_transaction.columnWeights = new double[]{1.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0};
+		gbl_transaction.rowWeights = new double[]{1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0};
 		transaction.setLayout(gbl_transaction);
 		
 		JLabel lblErrorInsufficientFunds = new JLabel("Error: Insufficient funds");
@@ -350,18 +359,19 @@ public class View {
 			}
 		});
 		GridBagConstraints gbc_btnReturnHomeFromTransaction = new GridBagConstraints();
+		gbc_btnReturnHomeFromTransaction.insets = new Insets(0, 0, 5, 0);
 		gbc_btnReturnHomeFromTransaction.anchor = GridBagConstraints.SOUTHWEST;
 		gbc_btnReturnHomeFromTransaction.gridx = 5;
-		gbc_btnReturnHomeFromTransaction.gridy = 8;
+		gbc_btnReturnHomeFromTransaction.gridy = 7;
 		transaction.add(btnReturnHomeFromTransaction, gbc_btnReturnHomeFromTransaction);
 		
 		JPanel confirmation = new JPanel();
 		frame.getContentPane().add(confirmation, CONFIRMATIONPANEL);
 		GridBagLayout gbl_confirmation = new GridBagLayout();
-		gbl_confirmation.columnWidths = new int[]{41, 171, 69, 143, 0};
-		gbl_confirmation.rowHeights = new int[]{42, 17, 43, 17, 17, 78, 30, 0};
+		gbl_confirmation.columnWidths = new int[] {30, 50, 30, 50, 20, 0};
+		gbl_confirmation.rowHeights = new int[] {30, 17, 30, 17, 17, 30, 20, 20, 20};
 		gbl_confirmation.columnWeights = new double[]{0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_confirmation.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_confirmation.rowWeights = new double[]{1.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0};
 		confirmation.setLayout(gbl_confirmation);
 		
 		lblConfirmationMessage = new JLabel("The user should not see this");

@@ -1,4 +1,7 @@
 package atm;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,11 +13,43 @@ import java.sql.SQLException;
  *
  */
 public class Utilities {
-	private static String SCHEMA = "atm"; 
+	private static String SCHEMA = "atm";
+	public static String environment = "test";
+	private static String username;
+	private static String password;
 	
 	@SuppressWarnings("unused") //for quick tests only
 	private static void main(String[] args){
 		Connection conn = getConnection();
+	}
+	
+	
+	/**loads database configuration from a yaml file
+	 * 
+	 * @param path the path to the yaml file
+	 * @return the yaml file
+	 */
+	
+	/**
+	 * 
+	 * @param env the environment to set
+	 */
+	public static void setEnvironment(String env){
+		environment = env;
+	}
+	
+	private static void getConfig() throws IOException{
+		BufferedReader stream;
+		stream = new BufferedReader(new FileReader(".config.txt"));
+		for (String line = stream.readLine(); line != null; line = stream.readLine()) {
+			if (line.contains(environment + "_username")) {
+				username = line.split(":")[1].trim();
+			} 
+			if (line.contains(environment + "_password")) {
+				password = line.split(":")[1].trim();
+			}
+		}
+		stream.close();
 	}
 
 	/**
@@ -23,30 +58,33 @@ public class Utilities {
 	 * @return A connection to the database
 	 */
 	public static Connection getConnection(){
+
+		try {
+			getConfig();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 		log("Loading driver...");
 		Connection conn;
 		
         try {
             // The newInstance() call is a work around for some
             // broken Java implementations
-        	Class.forName("com.mysql.jdbc.Driver").newInstance();
+        	//Class.forName("com.mysql.jdbc.Driver").newInstance();
         } catch (Exception ex) {
         	//lines below are useful for debugging classpath problems
-        	log(ex.getMessage());
-        	log(ex.toString());
-        	log(ex.getStackTrace().toString());
+        	ex.printStackTrace();
             System.exit(1);
+            return null; //required by Java
         }
         
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/"+SCHEMA, "guest", "guest");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/"+SCHEMA, username, password);
             log("Success");
             return conn;
         } catch (SQLException ex) {
-            // handle any errors
-            log("SQLException: " + ex.getMessage());
-            log("SQLState: " + ex.getSQLState());
-            log("VendorError: " + ex.getErrorCode());
+            ex.printStackTrace();
             System.exit(1);
             return null; //required by Java
         }

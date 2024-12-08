@@ -1,5 +1,4 @@
 package atm;
-import java.math.BigInteger;
 import java.security.InvalidParameterException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.commons.dbutils.DbUtils;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  * Class used for database interaction.
